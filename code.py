@@ -1,87 +1,71 @@
 # -*- coding: utf-8 -*-
-"home work 3"
+"class practice work 3"
 
-import time
+#def sum(e, z, a = 4, b = 3):
+#	"Bla bla"
+#	return a + b
 
-def map_rq(func, iterator):
-    "map rererererecursion"
+def get_params(func):
+	"Get info fucn"
 
-    res = []
-    if len(iterator) == 0:
-        return res
-    res.append(func(iterator[0]))
-    res += map_rq(func, iterator[1:])
-    return res
+	print "Name: ", func.func_name
+	print "Docs: ", func.func_doc
+	print "Count args: ", func.func_code.co_argcount
+	print "Args: ", func.func_code.co_varnames
+	print "Defaults: ", func.func_defaults
+	return 
 
-def map_yield(func, iterator):
-    "map generator"
+def my_filter(func, iterator):
+	"Map"
 
-    for i in iterator:
-        yield func(i)
+	res = []
+	for i in iterator:
+		 if func(i):
+		 	res.append(i)
+	return res
 
-def map_rq_yield(func, iterator):
-    "map rereregenerator"
-    
-    yield func(iterator[0])
+def gh(param):
+	"If more than 3"
 
-    for x in map_rq_yield(func, iterator[1: ]):
-        yield x
+	return param > 3
 
-def time_me(func, stat_dict):
-    "function with params"
-    stat_dict.setdefault('num_calls', 0)
-    stat_dict.setdefault('cum_time', 0)
-    def decorator(main_func):
-        "decorator"
+def my_reduce(func, sequence):
+	"Reduce"
 
-        def wrapper(*args, **kwargs):
-            "rapper function to profilling func"
+	if len(sequence) < 2:
+		return None
+	temp = sequence[0]
+	for val in sequence[1:]:
+		temp = func(temp, val)
 
-            stat_dict['num_calls'] += 1
-            time_1 = func()
-            res = main_func(*args, **kwargs)
-            time_2 = func()
-            stat_dict['cum_time'] += time_2 - time_1
-            return res
+	return temp
 
-        return wrapper
+def my_sum(a, b):
+	return a + b
 
-    return decorator
+def func1():
+	def func2():
+		pass
+	return func2
+
+def haskell(*funcs):
+	def fC(x):
+		for f in funcs[::-1]:
+			x = f(x)
+		return x
+	return fC
 
 def main():
     "main"
 
-    assert map_rq(lambda x : x ** 2, [1, 2, 3]) == [1, 4, 9]
-    gen = map_yield(lambda x : x ** 2, [1, 2, 3])
-    print "Map recurse OK!"
-
-    assert next(gen) == 1
-    assert next(gen) == 4
-    assert next(gen) == 9
-    print "Map generator OK!"
-
-    gen1 = map_rq_yield(lambda x : x ** 2, [1, 2, 3])
-    assert next(gen1) == 1
-    assert next(gen1) == 4
-    assert next(gen1) == 9
-    print "Map recurse generator OK!"
-
-    statistics = {}
-    @time_me(time.clock, statistics)
-    def som_func(param_x, param_y):
-        "temp fucntion to profill"
-        time.sleep(1.1)
-
-    som_func(1, 2)
-    som_func(1, 2)
-
-    assert statistics['num_calls'] == 2
-    assert 2.5 > statistics['cum_time'] > 2
-    print "Decorator OK!"
-
+    temp_fc = haskell(gh, sum)
+    assert temp_fc([1,10]) == True
+    assert my_filter(gh, (1, 2, 3, 4, 5, 6)) == [4, 5, 6]
+    assert my_reduce(my_sum, (1,1,1,1,1,1,4)) == 10
+    assert (func1() is func1()) == False
+    print "TEST OK!"
     raw_input()
     return 0
 
-
-if __name__ == "__main__":
-    exit(main())
+if __name__ == "__main__":    
+	exit(main())
